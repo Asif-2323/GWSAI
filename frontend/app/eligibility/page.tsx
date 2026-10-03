@@ -1,0 +1,11 @@
+﻿'use client'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { api } from '@/services/api'
+import type { Profile } from '@/types'
+import { ProtectedPage } from '@/components/protected-page'
+import { ProfileForm } from '@/components/profile-form'
+import { PageHeader } from '@/components/page-header'
+import { Card, CardContent } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
+export default function Eligibility() { const [profile,setProfile]=useState<Profile|null|undefined>(undefined); const router=useRouter(); useEffect(()=>{api.getProfile().then(setProfile).catch(()=>setProfile(null))},[]); return <ProtectedPage><PageHeader title="Eligibility profile" description="Tell us a little about yourself. You can update these details whenever your circumstances change."/>{profile===undefined?<div className="grid h-64 place-items-center"><Spinner className="size-7 text-primary"/></div>:<Card><CardContent className="p-6 sm:p-8"><ProfileForm initialProfile={profile} onSaved={()=>router.push('/recommendations')}/></CardContent></Card>}</ProtectedPage> }

@@ -1,0 +1,10 @@
+'use client'
+import { useEffect, useState } from 'react'
+import { api } from '@/services/api'
+import type { Profile } from '@/types'
+import { ProtectedPage } from '@/components/protected-page'
+import { ProfileForm } from '@/components/profile-form'
+import { PageHeader } from '@/components/page-header'
+import { Card, CardContent } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
+export default function ProfilePage() { const [profile,setProfile]=useState<Profile|null|undefined>(undefined);useEffect(()=>{api.getProfile().then(setProfile).catch(()=>setProfile(null))},[]);return <ProtectedPage><PageHeader title="My profile" description="Keep your information current for more useful scheme matches."/>{profile===undefined?<div className="grid h-64 place-items-center"><Spinner className="size-7 text-primary"/></div>:<Card><CardContent className="p-6 sm:p-8"><ProfileForm initialProfile={profile} onSaved={setProfile}/></CardContent></Card>}</ProtectedPage> }

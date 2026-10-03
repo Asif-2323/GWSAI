@@ -1,0 +1,15 @@
+﻿'use client'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import { Bot, ClipboardList, Compass, LayoutDashboard, LogOut, Menu, MessageSquare, Route, UserRound, X } from 'lucide-react'
+import { useState } from 'react'
+import { useAuth } from '@/context/auth-context'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+const navigation = [{ href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard }, { href: '/eligibility', label: 'Eligibility form', icon: ClipboardList }, { href: '/recommendations', label: 'Recommendations', icon: Compass }, { href: '/roadmap', label: 'Future roadmap', icon: Route }, { href: '/chat', label: 'Ask AI', icon: MessageSquare }, { href: '/profile', label: 'My profile', icon: UserRound }]
+export function AppShell({ children }: { children: React.ReactNode }) {
+  const { user, logout } = useAuth(); const pathname = usePathname(); const router = useRouter(); const [open, setOpen] = useState(false)
+  const signOut = () => { logout(); router.push('/') }
+  const links = <nav className="space-y-1">{navigation.map(({ href, label, icon: Icon }) => <Link key={href} href={href} onClick={() => setOpen(false)} className={cn('flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors', pathname === href ? 'bg-primary text-primary-foreground' : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground')}><Icon className="size-4" />{label}</Link>)}</nav>
+  return <div className="min-h-screen bg-background"><aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-sidebar-border bg-sidebar p-4 md:flex md:flex-col"><Link href="/dashboard" className="mb-8 flex items-center gap-3 px-2 text-sidebar-foreground"><span className="grid size-9 place-items-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground"><Bot className="size-5" /></span><span className="font-display text-lg font-bold">YojanaMitra</span></Link>{links}<div className="mt-auto border-t border-sidebar-border pt-4"><p className="mb-3 truncate px-2 text-sm text-sidebar-foreground/70">{user?.full_name}</p><Button variant="ghost" className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" onClick={signOut}><LogOut /> Sign out</Button></div></aside><header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-4 backdrop-blur md:ml-64 md:hidden"><Link href="/dashboard" className="flex items-center gap-2 font-display font-bold"><Bot className="text-primary" /> YojanaMitra</Link><Button variant="ghost" size="icon" aria-label="Toggle menu" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</Button></header>{open && <div className="fixed inset-x-0 top-16 z-30 border-b bg-sidebar p-4 md:hidden">{links}<Button variant="ghost" className="mt-4 w-full justify-start text-sidebar-foreground" onClick={signOut}><LogOut /> Sign out</Button></div>}<main className="md:ml-64"><div className="mx-auto max-w-7xl p-5 sm:p-8">{children}</div></main></div>
+}

@@ -1,0 +1,3 @@
+import type { Profile } from '@/types'
+export const defaultProfile: Profile = { full_name: '', age: 18, gender: 'other', state: '', district: '', occupation: '', education: '', annual_income: 0, category: 'general', disability_status: false, minority_status: false, student_status: false, farmer_status: false, widow_status: false, senior_citizen_status: false, bpl_status: false }
+export const profileComplete = (profile: Profile | null | undefined): profile is Profile => Boolean(profile && profile.full_name && profile.age > 0 && profile.state && profile.district && profile.occupation && profile.education)
